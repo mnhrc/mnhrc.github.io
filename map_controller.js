@@ -4,7 +4,7 @@ var courses = [];
 
 // Ask for data from the spreadsheet.
 function startDataLoad(callback) {
-    var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
+    var spreadsheetKey = "0AhJ8EeyPsiakdDR4QVBNcVk5QjRMX1h6amxEVjdac0E";
     var wsId = "od6";
     var url = "http://spreadsheets.google.com/feeds/list/" + spreadsheetKey + "/" + wsId + "/public/values?alt=json";
 
@@ -48,8 +48,8 @@ function onSpreadsheetData(json) {
 }
 
 function listLocation(organization, address) {
-        var output = '<tr class="locations"><td class="location-list">' 
-            + '<div class="location-button" onclick="selectAddressFromList(\'' + address + '\');">' 
+        var output = '<tr class="locations"><td class="location-list">'
+            + '<div class="location-button" onclick="selectAddressFromList(\'' + address + '\');">'
             + organization + '</div></td></tr>';
         $('#location_table tr:last').after(output);
 }
@@ -59,7 +59,7 @@ function getFilteredCourses() {
     // For each course, execute the function to determine whether we should
     // show it or not.
     return courses.filter(function (course) {
-        
+
         // Filter by start date.
         var courseDate = course.startDate;
         if (courseDate !== "" && courseDate.indexOf('/') !== -1) {
@@ -79,7 +79,7 @@ function getFilteredCourses() {
                 return false;
             }
         }
-        
+
         // Filter by level.
         var level = $("#level_menu").val();
         if (level !== "" && course.courseName.toLowerCase().indexOf(level.toLowerCase()) === -1)
@@ -122,7 +122,7 @@ function ViewModel() {
     self.selectedDescription = ko.observable();
     self.selectedContactInfo = ko.observable();
     self.selectedUrl = ko.observable();
-    
+
     self.select = function (data) {
         self.selectedCourseName(data.courseName);
         self.selectedDescription(data.description);
@@ -237,19 +237,19 @@ function initialize() {
     // declare jquery listeners
     $("select.filter_menu").change(updateMap);
     $("#aboutLink").click(function() {
-        $("#about_window").toggle();    
+        $("#about_window").toggle();
     });
     startDataLoad(updateMap);
 }
 
 function showHideLocations() {
-    $("#location-list").toggle();    
-    $("#location-top").toggle();    
-    $("#navigation").toggle();    
+    $("#location-list").toggle();
+    $("#location-top").toggle();
+    $("#navigation").toggle();
 }
 
 function hideAbout() {
-    $("#about_window").toggle();    
+    $("#about_window").toggle();
 }
 
 function updateMap() {
