@@ -4,7 +4,7 @@ var courses = [];
 
 // Ask for data from the spreadsheet.
 function startDataLoad(callback) {
-    var spreadsheetKey = "0AhJ8EeyPsiakdDR4QVBNcVk5QjRMX1h6amxEVjdac0E";
+    var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
     var wsId = "od6";
     var url = "http://cors.io/spreadsheets.google.com/feeds/list/" + spreadsheetKey + "/" + wsId + "/public/values?alt=json";
 
