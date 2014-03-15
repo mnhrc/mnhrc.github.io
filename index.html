@@ -9,7 +9,7 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgOeFbqElcSmR-zjycke6U8cvfS6E3x14&sensor=false"></script>
         <script src="map_controller.js"></script>
-        <meta name="Authors" content="Jason Orendorff, Jacques Woodcock, Amber Adams, Chuck Bryant" />
+        <meta name="Authors" content="Jason Orendorff, Jacques Woodcock, Amber Adams, Chuck Bryant, Jason Myers" />
     </head>
     <body>
         <div id="about_window">
@@ -49,18 +49,31 @@
                         </select>
                     </div>
                 </li>
+                <li class="class_schedule" title="Select Class Schedule">
+                    <div class="select_wrapper">
+                        <select id="schedule_menu" class="filter_menu">
+                            <option value="">Any</option>
+                            <option value="semester">Semester</option>
+                            <option value="trimester">Trimester</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="ongoing">Ongoing</option>
+                        </select>
+                    </div>
+                </li>
                 <li class="level" title="Select Level">
                     <div class="select_wrapper">
                         <select id="level_menu" class="filter_menu">
                             <option value="">Any</option>
                             <option value="pre-literate">Pre-Literate</option>
-                            <option value="levels1">Levels 1</option>
-                            <option value="levels2">Levels 2</option>
-                            <option value="levels3">Levels 3</option>
-                            <option value="levels4">Levels 4</option>
-                            <option value="levels5">Levels 5</option>
+                            <option value="intro">Intro</option>
+                            <option value="level 1">Level 1</option>
+                            <option value="level 2">Level 2</option>
+                            <option value="level 3">Level 3</option>
+                            <option value="level 4">Level 4</option>
+                            <option value="level 5">Level 5</option>
                             <option value="conversation">Conversation</option>
                             <option value="ged">GED</option>
+                            <option value="citizenship">Citizenship</option>
                         </select>
                     </div>
                 </li>
@@ -79,6 +92,7 @@
                     </div>
                 </li>
             </ul>
+            To submit a class click <a href="https://docs.google.com/a/jasonamyers.com/forms/d/1yQP_1ph3Rx3VNEIiHvYny9QtoDClMXNa7F1ro0srFjA/viewform">here.</a>
             </div>
             <div id="search_button">
                 <button onclick="showHideLocations()"value="SEARCH" id="search_button">SEARCH</button>
@@ -94,30 +108,34 @@
             </div>
             <div class="hide" onclick="hidePopup()"></div>
             <div class="organization" data-bind="text: organization"></div>
-            <div class="address" data-bind="text: address"></div>
+            <div class="contact_info" data-bind="text: address"></div>
+            <div class="contact_info" data-bind="text: phoneNumber"></div>
+            <div class="contact_info" data-bind="html: emailAddress"></div>
+            <div class="contact_info" data-bind="html: websiteUrl"></div>
+            <div class="description" data-bind="text: description"></div>
+            <div class="description" data-bind="text: faithBased"></div>
+
+            <hr>
             <div class="course_wrapper">
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th width="60%">Class</th>
+                            <th width="50%">Class</th>
                             <th width="20%">Date</th>
+                            <th width="10%">Schedule</th>
                             <th>Fee</th>
+
                         </tr>
                     </thead>
                     <tbody data-bind="foreach: coursesAtLocation">
-                        <tr class="course" data-bind="click:$parent.select">
-                            <td width="60%" class="name" data-bind="text: courseName"></td>
+                        <tr class="course">
+                            <td width="50%" class="coursesOffered" data-bind="text: coursesOffered"></td>
                             <td width="20%" class="startDate" data-bind="text: startDate"></td>
+                            <td width="10%" class="classSchedule" data-bind="text: classSchedule"></td>
                             <td class="fee" data-bind="text: fee"></td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div id="course-detail" data-bind="visible: anySelected">
-                <h4 class="courseName" data-bind="text: selectedCourseName"></h4>
-                <div class="description" data-bind="text: selectedDescription"></div>
-                <div class="contactInfo" data-bind="text: selectedContactInfo"></div>
-                <button class="website" data-bind="click: viewWebsite">Website</button>
             </div>
         </div>
         <div id="location-list">

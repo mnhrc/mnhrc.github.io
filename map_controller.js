@@ -4,21 +4,24 @@ var courses = [];
 
 // Ask for data from the spreadsheet.
 function startDataLoad(callback) {
-    var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
-    var wsId = "od6";
-    var url = "http://cors.io/spreadsheets.google.com/feeds/list/" + spreadsheetKey + "/" + wsId + "/public/values?alt=json";
+  var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
+  var wsId = "od6";
+  var url = "http://cors.io/spreadsheets.google.com/feeds/list/" +
+            spreadsheetKey + "/" + wsId + "/public/values?alt=json";
 
-    $.getJSON(url, function (json) {
-        onSpreadsheetData(json);
-        callback();
-    });
+  $.getJSON(url, function (json) {
+    onSpreadsheetData(json);
+    callback();
+  });
 }
 
 // This is called when the data loads from the spreadsheet.
 function onSpreadsheetData(json) {
-    var fields = ["organization", "locationName", "address", "latitudeLongitude",
-                  "courseName", "startDate", "fee", "description", "contactInfo",
-                  "url"];
+    var fields = ["organization", "address", "latitudeLongitude", "site1Address",
+                  "site2Address", "coursesOffered", "startDate", "fee",
+                  "description", "phoneNumber", "emailAddress", "websiteUrl",
+                  "daysClassesOffered", "classtimes", "faithBased",
+                  "classSchedule"];
     var lastRow = {};
     json.feed.entry.forEach(function (row) {
         var newRow = {};
@@ -82,8 +85,15 @@ function getFilteredCourses() {
 
         // Filter by level.
         var level = $("#level_menu").val();
-        if (level !== "" && course.courseName.toLowerCase().indexOf(level.toLowerCase()) === -1)
-            return false;
+        if (level !== "" && course.coursesOffered.toLowerCase().indexOf(level.toLowerCase()) === -1) {
+          return false;
+        }
+
+        // Filter by schedule.
+        var schedule = $("#schedule_menu").val();
+        if (level !== "" && course.classSchedule.toLowerCase().indexOf(schedule.toLowerCase()) === -1) {
+          return false;
+        }
 
         // Filter by cost.
         var fee = $("#cost_menu").val();
@@ -116,33 +126,25 @@ function ViewModel() {
 
     self.organization = ko.observable();
     self.address = ko.observable();
+    self.phoneNumber = ko.observable();
+    self.emailAddress = ko.observable();
+    self.websiteUrl = ko.observable();
     self.coursesAtLocation = ko.observableArray();
     self.anySelected = ko.observable(false);
-    self.selectedCourseName = ko.observable();
-    self.selectedDescription = ko.observable();
-    self.selectedContactInfo = ko.observable();
-    self.selectedUrl = ko.observable();
-
-    self.select = function (data) {
-        self.selectedCourseName(data.courseName);
-        self.selectedDescription(data.description);
-        self.selectedContactInfo(data.contactInfo);
-        self.selectedUrl(data.url);
-        self.anySelected(true);
-    };
-
+    self.description = ko.observable();
+    self.faithBased = ko.observable();
     self.update = function (data) {
         self.organization(data.organization);
         self.address(data.address);
+        self.emailAddress("<a href=mailto:" + data.emailAddress + ">" + data.emailAddress + "</a>");
+        self.phoneNumber(data.phoneNumber);
+        self.websiteUrl("<a href=" + data.websiteUrl + ">" + data.websiteUrl + "</a>");
+        self.description(data.description);
+        self.faithBased(data.faithBased);
         self.coursesAtLocation.removeAll();
         data.coursesAtLocation.forEach(function (course) {
             self.coursesAtLocation.push(course);
         });
-        self.anySelected(false);
-    };
-
-    self.viewWebsite = function () {
-        document.location.href = self.selectedUrl();
     };
 }
 
@@ -173,6 +175,11 @@ function updatePopup() {
         model.update({
             organization: matches[0].organization,
             address: selectedAddress,
+            phoneNumber: matches[0].phoneNumber,
+            emailAddress: matches[0].emailAddress,
+            websiteUrl: matches[0].websiteUrl,
+            description: matches[0].description,
+            faithBased: matches[0].faithBased,
             coursesAtLocation: matches
         });
         document.getElementById("location-popup").style.display = "block";
@@ -273,4 +280,3 @@ function updateMap() {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
-

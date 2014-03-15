@@ -1,16 +1,16 @@
 html { height: 100% }
-body { 
-    font-family: Helvetica, Arial, sans-serif; 
-    height: 100%; 
-    margin: 0; 
-    padding: 0; 
-    font-weight: lighter; 
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-weight: lighter;
 }
 
 
 .select_wrapper {
     width: 160px;
-    overflow: hidden; 
+    overflow: hidden;
     border: 1px solid #784cc6;
     background: url(images/icon_dropdown.png) no-repeat right;
 }
@@ -27,7 +27,7 @@ body {
     -webkit-appearance:none;
 }
 
-#map-canvas { 
+#map-canvas {
     height: 100%;
     margin-left: 242px;
 }
@@ -42,7 +42,7 @@ body {
     position: absolute;
     right: 50px;
     top: 30px;
-    width: 4in; 
+    width: 4in;
     font-family: sans-serif;
     color: #888;
 }
@@ -59,24 +59,20 @@ body {
 }
 
 .organization {
-    font-size: 18px;
+    font-size: 20px;
     color: #666666;
     margin-top: 30px;
 }
 
-.address {
+.contact_info {
     font-size: 14px;
     color: #666666;
-    margin-bottom: 20px;
 }
 
 .course {
-    cursor: pointer;
-    background: url(images/icon_class_arrow.png) right 5px no-repeat;
 }
 
 .course:hover {
-    background-color: #f3e8f8;
 }
 
 .course_holder {
@@ -142,6 +138,10 @@ body {
 
 .level {
     background: url(images/navigation_icons.png) 2px -44px no-repeat;
+}
+
+.class_schedule {
+    background: url(images/navigation_icons.png) 2px -130px no-repeat;
 }
 
 .cost {
@@ -271,7 +271,7 @@ button:hover {
         display: block;
         display: none;
         width: 100%;
-        height: 
+        height:
         position: relative;
         margin: 0px;
         padding: 1.5em 1em;
@@ -352,9 +352,9 @@ button:hover {
 }
 
 /* iPhone4 (landscape) ----------- */
-/*@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) 
+/*@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px)
 and (orientation : landscape) {
         #map-canvas {
             display: none;
