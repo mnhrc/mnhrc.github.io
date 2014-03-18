@@ -38,20 +38,21 @@ function onSpreadsheetData(json) {
             var fieldName = name.toLowerCase();
             var value = row["gsx$" + fieldName].$t;
             if (sameOrg && value === "")
-                value = lastRow[name];
+              value = lastRow[name];
             newRow[name] = value;
-        });
+          });
         lastRow = newRow;
 
         // Only add the row to courses if it has been approved.
-        if (row.gsx$status.$t == 'Approved')
-            courses.push(newRow);
-    });
+        if (row.gsx$status.$t == 'Approved') {
+          courses.push(newRow);
+        }
+        });
     haveData = true;
-}
+  }
 
 function listLocation(organization, classAddress) {
-        var output = '<tr class="locations"><td class="location-list">'
+      var output = '<tr class="locations"><td class="location-list">'
             + '<div class="location-button" onclick="selectAddressFromList(\'' + classAddress + '\');">'
             + organization + '</div></td></tr>';
         $('#location_table tr:last').after(output);
@@ -66,20 +67,20 @@ function getFilteredCourses() {
         // Filter by start date.
         var courseDate = course.startDate;
         if (courseDate !== "" && courseDate.indexOf('/') !== -1) {
-            var filterInput = parseInt($("#start_date_menu").val());
-            var filterEnd = moment().day(filterInput);
-            var filterStart = moment();
-            if (filterInput === 60) {
-                filterStart = moment().add('d', 30);
-            }
-            if (filterInput === 90) {
-                filterStart = moment().add('d', 60);
-            }
-            var courseCompare = moment(courseDate);
-            if (courseCompare.valueOf() > filterEnd.valueOf()
-                    || courseCompare.valueOf() < filterStart.valueOf()) {
-                return false;
-            }
+          var filterInput = parseInt($("#start_date_menu").val());
+          var filterEnd = moment().day(filterInput);
+          var filterStart = moment();
+          if (filterInput === 60) {
+            filterStart = moment().add('d', 30);
+          }
+          if (filterInput === 90) {
+            filterStart = moment().add('d', 60);
+          }
+          var courseCompare = moment(courseDate);
+          if (courseCompare.valueOf() > filterEnd.valueOf() ||
+              courseCompare.valueOf() < filterStart.valueOf()) {
+            return false;
+          }
         }
 
         // Filter by level.
@@ -98,22 +99,22 @@ function getFilteredCourses() {
         var fee = $("#cost_menu").val();
         var courseFee = course.fee.toLowerCase();
         if (fee !== courseFee.toLowerCase() && fee !== "") {
-            if (courseFee !== "" && courseFee !== "free") {
-                if (fee == "free") {
-                  return false;
-                }
-                var testFee = parseInt(courseFee);
-                var filterFee = parseInt(fee);
-                if (testFee >= filterFee) {
-                    return false;
-                }
+          if (courseFee !== "" && courseFee !== "free") {
+            if (fee == "free") {
+              return false;
             }
+            var testFee = parseInt(courseFee);
+            var filterFee = parseInt(fee);
+            if (testFee >= filterFee) {
+              return false;
+            }
+          }
         }
 
         // If we passed all those, this course is selected. Hooray!
         return true;
-    });
-}
+      });
+  }
 
 
 // Knockout bindings :( =======================================================
@@ -131,6 +132,7 @@ function ViewModel() {
     self.anySelected = ko.observable(false);
     self.description = ko.observable();
     self.faithBased = ko.observable();
+
     self.update = function (data) {
         self.organization(data.organization);
         self.address(data.address);
@@ -143,51 +145,51 @@ function ViewModel() {
         self.coursesAtLocation.removeAll();
         data.coursesAtLocation.forEach(function (course) {
             self.coursesAtLocation.push(course);
-        });
-    };
-}
+          });
+      };
+  }
 
 var model = new ViewModel;
 var selectedAddress = null;
 
 function selectAddress(classAddress) {
-    selectedAddress = classAddress;
-    updatePopup();
+  selectedAddress = classAddress;
+  updatePopup();
 }
 
 function selectAddressFromList(classAddress) {
-    selectedAddress = classAddress;
-    toggleDetails();
-    updatePopup();
+  selectedAddress = classAddress;
+  toggleDetails();
+  updatePopup();
 }
 
 function toggleDetails() {
-    $('#location-popup').toggle();
-    $('#location-list').toggle();
+  $("#location-popup").toggle();
+  $("#location-list").toggle();
 }
 
 function updatePopup() {
-    var matches = getFilteredCourses().filter(function (course) {
-        return course.classAddress == selectedAddress;
+  var matches = getFilteredCourses().filter(function (course) {
+    return course.classAddress == selectedAddress;
+  });
+  if (matches.length !== 0) {
+    model.update({
+      organization: matches[0].organization,
+      address: matches[0].address,
+      classAddress: selectedAddress,
+      phoneNumber: matches[0].phoneNumber,
+      emailAddress: matches[0].emailAddress,
+      websiteUrl: matches[0].websiteUrl,
+      description: matches[0].description,
+      faithBased: matches[0].faithBased,
+      coursesAtLocation: matches
     });
-    if (matches.length !== 0) {
-        model.update({
-            organization: matches[0].organization,
-            address: matches[0].address,
-            classAddress: selectedAddress,
-            phoneNumber: matches[0].phoneNumber,
-            emailAddress: matches[0].emailAddress,
-            websiteUrl: matches[0].websiteUrl,
-            description: matches[0].description,
-            faithBased: matches[0].faithBased,
-            coursesAtLocation: matches
-        });
-        document.getElementById("location-popup").style.display = "block";
-    }
+    document.getElementById("location-popup").style.display = "block";
+  }
 }
 
 function hidePopup() {
-    document.getElementById("location-popup").style.display = "none";
+  document.getElementById("location-popup").style.display = "none";
 }
 
 
@@ -197,38 +199,37 @@ var map = undefined, geocoder;
 var markers = [];
 
 function insertPin(course) {
-    var address = course.classAddress;
-    var organization = course.organization;
-    $('#location_table tbody').html('');
-    //alert($('#location_table tbody').html());
-    listLocation(organization, address); // here
+  var address = course.classAddress;
+  var organization = course.organization;
+  $("#location_table tbody").html("");
+  listLocation(organization, address); // here
 
-    if (course.latitudeLongitude === "") {
-        geocoder.geocode(
-            {'address': address},
-            function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    makeMarker(results[0].geometry.location);
-                } else {
-                    console.error("Geocoding failed: " + status);
-                }
-            });
-    } else {
-        var parts = course.latitudeLongitude.split(",");
-        makeMarker(new google.maps.LatLng(Number(parts[0]), Number(parts[1])));
-    }
+  if (course.latitudeLongitude === "") {
+    geocoder.geocode(
+      {"address": address},
+      function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          makeMarker(results[0].geometry.location);
+        } else {
+          console.error("Geocoding failed: " + status);
+        }
+      });
+  } else {
+    var parts = course.latitudeLongitude.split(",");
+    makeMarker(new google.maps.LatLng(Number(parts[0]), Number(parts[1])));
+  }
 
-    function makeMarker(location) {
-        var marker = new google.maps.Marker({
-            map: map,
-            position: location,
-            title: organization
-        });
-        markers.push(marker);
-        google.maps.event.addListener(marker, 'click', function() {
-            selectAddress(address);
-        });
-    }
+  function makeMarker(location) {
+    var marker = new google.maps.Marker({
+      map: map,
+      position: location,
+      title: organization
+    });
+    markers.push(marker);
+    google.maps.event.addListener(marker, "click", function() {
+      selectAddress(address);
+    });
+  }
 }
 
 function initialize() {
