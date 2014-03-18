@@ -182,6 +182,18 @@ div.contactInfo {
     font-size: 85%;
 }
 
+div.class_at {
+    color: #784cc6;
+    font-weight: normal;
+    text-align: left;
+    padding: 0px .5em;
+}
+
+div.class_address {
+  text-align: left;
+  padding: 0px 1em;
+}
+
 button {
     margin-left: auto;
     margin-right: 0;

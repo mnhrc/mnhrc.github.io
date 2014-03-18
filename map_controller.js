@@ -17,8 +17,8 @@ function startDataLoad(callback) {
 
 // This is called when the data loads from the spreadsheet.
 function onSpreadsheetData(json) {
-    var fields = ["organization", "address", "latitudeLongitude", "site1Address",
-                  "site2Address", "coursesOffered", "startDate", "fee",
+    var fields = ["organization", "address", "latitudeLongitude", "classAddress",
+                  "coursesOffered", "startDate", "fee",
                   "description", "phoneNumber", "emailAddress", "websiteUrl",
                   "daysClassesOffered", "classtimes", "faithBased",
                   "classSchedule"];
@@ -50,9 +50,9 @@ function onSpreadsheetData(json) {
     haveData = true;
 }
 
-function listLocation(organization, address) {
+function listLocation(organization, classAddress) {
         var output = '<tr class="locations"><td class="location-list">'
-            + '<div class="location-button" onclick="selectAddressFromList(\'' + address + '\');">'
+            + '<div class="location-button" onclick="selectAddressFromList(\'' + classAddress + '\');">'
             + organization + '</div></td></tr>';
         $('#location_table tr:last').after(output);
 }
@@ -76,9 +76,8 @@ function getFilteredCourses() {
                 filterStart = moment().add('d', 60);
             }
             var courseCompare = moment(courseDate);
-            if (courseCompare.valueOf() <= filterEnd.valueOf()
-                    && courseCompare.valueOf() >= filterStart.valueOf()) {
-            } else {
+            if (courseCompare.valueOf() > filterEnd.valueOf()
+                    || courseCompare.valueOf() < filterStart.valueOf()) {
                 return false;
             }
         }
@@ -91,7 +90,7 @@ function getFilteredCourses() {
 
         // Filter by schedule.
         var schedule = $("#schedule_menu").val();
-        if (level !== "" && course.classSchedule.toLowerCase().indexOf(schedule.toLowerCase()) === -1) {
+        if (schedule !== "" && course.classSchedule.toLowerCase().indexOf(schedule.toLowerCase()) === -1) {
           return false;
         }
 
@@ -100,16 +99,14 @@ function getFilteredCourses() {
         var courseFee = course.fee.toLowerCase();
         if (fee !== courseFee.toLowerCase() && fee !== "") {
             if (courseFee !== "" && courseFee !== "free") {
+                if (fee == "free") {
+                  return false;
+                }
                 var testFee = parseInt(courseFee);
                 var filterFee = parseInt(fee);
-                if ((filterFee === 100 || filterFee === 200) && testFee >= filterFee) {
+                if (testFee >= filterFee) {
                     return false;
                 }
-                if (filterFee === 201 && testFee < filterFee) {
-                    return false;
-                }
-            } else {
-                return false;
             }
         }
 
@@ -126,6 +123,7 @@ function ViewModel() {
 
     self.organization = ko.observable();
     self.address = ko.observable();
+    self.classAddress = ko.observable();
     self.phoneNumber = ko.observable();
     self.emailAddress = ko.observable();
     self.websiteUrl = ko.observable();
@@ -136,6 +134,7 @@ function ViewModel() {
     self.update = function (data) {
         self.organization(data.organization);
         self.address(data.address);
+        self.classAddress(data.classAddress);
         self.emailAddress("<a href=mailto:" + data.emailAddress + ">" + data.emailAddress + "</a>");
         self.phoneNumber(data.phoneNumber);
         self.websiteUrl("<a href=" + data.websiteUrl + ">" + data.websiteUrl + "</a>");
@@ -151,13 +150,13 @@ function ViewModel() {
 var model = new ViewModel;
 var selectedAddress = null;
 
-function selectAddress(address) {
-    selectedAddress = address;
+function selectAddress(classAddress) {
+    selectedAddress = classAddress;
     updatePopup();
 }
 
-function selectAddressFromList(address) {
-    selectedAddress = address;
+function selectAddressFromList(classAddress) {
+    selectedAddress = classAddress;
     toggleDetails();
     updatePopup();
 }
@@ -169,12 +168,13 @@ function toggleDetails() {
 
 function updatePopup() {
     var matches = getFilteredCourses().filter(function (course) {
-        return course.address == selectedAddress;
+        return course.classAddress == selectedAddress;
     });
     if (matches.length !== 0) {
         model.update({
             organization: matches[0].organization,
-            address: selectedAddress,
+            address: matches[0].address,
+            classAddress: selectedAddress,
             phoneNumber: matches[0].phoneNumber,
             emailAddress: matches[0].emailAddress,
             websiteUrl: matches[0].websiteUrl,
@@ -197,7 +197,7 @@ var map = undefined, geocoder;
 var markers = [];
 
 function insertPin(course) {
-    var address = course.address;
+    var address = course.classAddress;
     var organization = course.organization;
     $('#location_table tbody').html('');
     //alert($('#location_table tbody').html());
@@ -269,8 +269,8 @@ function updateMap() {
     // Insert new pins.
     var pinAddresses = [];
     getFilteredCourses().forEach(function (course) {
-        if (pinAddresses.indexOf(course.address) === -1) {
-            pinAddresses.push(course.address);
+        if (pinAddresses.indexOf(course.classAddress) === -1) {
+            pinAddresses.push(course.classAddress);
             insertPin(course);
         }
     });
