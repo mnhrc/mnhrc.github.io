@@ -60,6 +60,7 @@ function listLocation(organization, classAddress) {
 
 // This is the function that figures out which courses to show on the map.
 function getFilteredCourses() {
+
     // For each course, execute the function to determine whether we should
     // show it or not.
     return courses.filter(function (course) {
@@ -278,6 +279,7 @@ function updateMap() {
 
     // If the popup is visible, we'll want to update that too.
     updatePopup();
+    hidePopup();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
