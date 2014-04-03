@@ -21,7 +21,7 @@ function onSpreadsheetData(json) {
                   "coursesOffered", "startDate", "fee",
                   "description", "phoneNumber", "emailAddress", "websiteUrl",
                   "daysClassesOffered", "classtimes", "faithBased",
-                  "classSchedule"];
+                  "classSchedule", "curriculumUsed"];
     var lastRow = {};
     json.feed.entry.forEach(function (row) {
         var newRow = {};
