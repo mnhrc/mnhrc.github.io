@@ -6,7 +6,7 @@ var courses = [];
 function startDataLoad(callback) {
   var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
   var wsId = "od6";
-  var url = "http://cors.io/spreadsheets.google.com/feeds/list/" +
+  var url = "http://www.corsproxy.com/spreadsheets.google.com/feeds/list/" +
             spreadsheetKey + "/" + wsId + "/public/values?alt=json";
 
   $.getJSON(url, function (json) {
