@@ -4,10 +4,7 @@ var courses = [];
 
 // Ask for data from the spreadsheet.
 function startDataLoad(callback) {
-  var spreadsheetKey = "0Asw-rVCOgjt8dFBndXdYTWVhaDJpaW5LbXl2QTliUWc";
-  var wsId = "od6";
-  var url = "http://www.corsproxy.com/spreadsheets.google.com/feeds/list/" +
-            spreadsheetKey + "/" + wsId + "/public/values?alt=json";
+  var url = 'http://69.167.174.162/kkite/test.php';
 
   $.getJSON(url, function (json) {
     onSpreadsheetData(json);
