@@ -268,7 +268,7 @@ button:hover {
     display: none;
 }
 
-.errorOverlay {
+.overlay {
     position: fixed;
     top:    0;
     right:  0;
@@ -279,20 +279,20 @@ button:hover {
     padding: 16px;
 }
 
-.errorOverlay--fadeIn {
+.overlay--fadeIn {
     opacity: 0;
     transition: opacity 120ms ease-in;
 }
 
-.errorOverlay--fadeInEnd {
+.overlay--fadeInEnd {
     opacity: 1;
 }
 
-.errorOverlay--startNone {
-    /*display: none;*/
+.overlay--startNone {
+    display: none;
 }
 
-.errorOverlay-modal {
+.overlay-modal {
     margin: 0 auto;
     max-width: 600px;
 
@@ -308,11 +308,11 @@ button:hover {
         0 0 10px 1px rgba(0, 0, 0, 0.2);
 }
 
-.errorOverlay-modalTitle {
+.overlay-modalTitle {
 
 }
 
-.errorOverlay-modalBody {
+.overlay-modalBody {
 
 }
 
