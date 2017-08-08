@@ -268,6 +268,58 @@ button:hover {
     display: none;
 }
 
+.overlay {
+    position: fixed;
+    top:    0;
+    right:  0;
+    bottom: 0;
+    left:   0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    padding: 16px;
+}
+
+.overlay--fadeIn {
+    opacity: 0;
+    transition: opacity 120ms ease-in;
+}
+
+.overlay--fadeInEnd {
+    opacity: 1;
+}
+
+.overlay--startNone {
+    display: none;
+}
+
+.overlay-modal {
+    margin: 0 auto;
+    max-width: 600px;
+
+    top: 50%;
+    transform: translateY(-75%);
+
+    position: relative;
+
+    background-color: #fff;
+    border-top: 16px solid #784CC6;
+    padding: 16px 32px 32px 32px;
+    box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, .32),
+        0 0 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.overlay-modalTitle {
+
+}
+
+.overlay-modalBody {
+
+}
+
+.u-block { display: block; }
+.u-textCenter { text-align: center; }
+.u-fontLarge { font-size: 1.2em; }
+
 /****** MOBILE STYLES ******/
 
 /* iPhone5 () ----------- */
