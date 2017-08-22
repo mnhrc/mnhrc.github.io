@@ -2,54 +2,116 @@
 var haveData = false;
 var courses = [];
 
-// Ask for data from the spreadsheet.
-function startDataLoad(callback) {
-  var url = 'http://69.167.174.162/kkite/test.php';
+// Map ========================================================================
+google.maps.visualRefresh = true;
+var map = undefined, geocoder;
+var markers = [];
 
-  $.getJSON(url, function (json) {
-    onSpreadsheetData(json);
-    callback();
-  });
+google.maps.event.addDomListener(window, 'load', initialize);
+
+// connect to spreadsheet and pull data from it
+function initGAPI (callback) {
+    var clientId = '758431188519-datbjcc4jvimdqah661r237hpe06gqdg.apps.googleusercontent.com';
+    var scope = "https://www.googleapis.com/auth/spreadsheets.readonly";
+    //var scope = "spreadsheets.readonly";
+    var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+    var apiKey = 'AIzaSyC8YkrMM7NEO59ERQ2OBkE6I3QfLyVmN64';
+
+    return new Promise(function (res, rej) {
+        gapi.load('client', function () {
+            gapi.client.init({
+                apiKey: apiKey,
+                discoveryDocs: discoveryDocs,
+                //clientId: clientId,
+                scope: scope
+            })
+                .then(loadSheetData)
+                .then(function (locations) {
+                    res(locations);
+                });
+                // no catch on this thing?
+                //.catch(rej);
+        });
+    });
 }
 
-// This is called when the data loads from the spreadsheet.
-function onSpreadsheetData(json) {
-    var fields = ["organization", "address", "latitudeLongitude", "classAddress",
-                  "coursesOffered", "startDate", "fee",
-                  "description", "phoneNumber", "emailAddress", "websiteUrl",
-                  "daysClassesOffered", "classtimes", "faithBased",
-                  "classSchedule", "curriculumUsed"];
-    var lastRow = {};
-    json.feed.entry.forEach(function (row) {
-        var newRow = {};
+function loadSheetData () {
+    console.info('gapi::loadSheetData');
 
-        // Empty cells are automatically filled based on the preceding row, but
-        // ONLY if this row has the same organization as the last one.
-        // Obviously it would be silly to auto-fill a row for one course with
-        // values from a different organization's course!
-        var org = row.gsx$organization.$t;
-        var sameOrg = org === lastRow.organization || org === "";
+    //var spreadsheetId = '1aI16jUKAHFLmjKXtjI2nCYltDWa1awCFZ2Kt1IhhbZ4';
+    var spreadsheetId = '1fnAs8ZrPcNGP6LTDyV9ajiP2grdpNCiPQlSdCVFM7ug';
 
-        // Populate all the fields.
-        fields.forEach(function (name) {
-            var fieldName = name.toLowerCase();
-            var value = row["gsx$" + fieldName].$t;
-            if (row["gsx$" + fieldName] === undefined) {
-                return;
-            }
-            if (sameOrg && value === "")
-              value = lastRow[name];
-            newRow[name] = value;
-          });
-        lastRow = newRow;
+    // triggering updateMap at some point
+    return gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: spreadsheetId,
+        range: 'Sheet1'
 
-        // Only add the row to courses if it has been approved.
-        if (row.gsx$status.$t == 'Approved') {
-          courses.push(newRow);
-        }
+    }).then(function onSheet (resp) {
+        var values = resp.result.values;
+
+        var fields = {
+            "Organization"         : "organization",
+            "address"              : "address",
+            "Latitude/Longitude"   : "latitudeLongitude",
+            "classAddress"         : "classAddress",
+            "Courses Offered"      : "coursesOffered",
+            "Start Date"           : "startDate",
+            "Fee"                  : "fee",
+            "Description"          : "description",
+            "Phone Number"         : "phoneNumber",
+            "Email Address"        : "emailAddress",
+            "websiteURL"           : "websiteUrl",
+            "Days Classes Offered" : "daysClassesOffered",
+            "Class Times"          : "classTimes",
+            "Faith Based"          : "faithBased",
+            "Class Schedule"       : "classSchedule",
+            "Status"               : "status",
+            "Site2Address"         : "site2Address",
+            "Curriculum Used"      : "curriculumUsed"
+         };
+
+        var headers = values[0].map(function mapHeader (header) {
+            return fields[header];
         });
-    haveData = true;
-  }
+
+        var locations = values.slice(1).map(function makeLocations (row) {
+            var location = {};
+
+            return headers.reduce(function mapToCells (acc, header, i) {
+                acc[header] = row[i];
+                return acc;
+            }, location);
+
+        }).map(function extractLatLon (location) {
+            // TODO a little checking would probably be good
+            // look here if map errors?
+            var latLon = location.latitudeLongitude.split(',');
+
+            location.$lat = latLon[0];
+            location.$lon = latLon[1];
+
+            return location;
+        });
+
+        locations
+            .filter(function (loc) { return loc.status === 'Approved'; })
+            .forEach(function (loc) { courses.push(loc); });
+
+        console.info('gapi::loadSheetData::ETL doneskies');
+
+        haveData = true;
+
+        return locations;
+    }).then(function cleanVals (locations) {
+        // big ugly data cleansing map
+        return locations.map(function (loc) {
+            if (loc.classSchedule === undefined)
+                loc.classSchedule = "";
+
+            return loc;
+        });
+    });
+}
 
 function listLocation(organization, classAddress) {
       var output = '<tr class="locations"><td class="location-list">'
@@ -92,6 +154,7 @@ function getFilteredCourses() {
 
         // Filter by schedule.
         var schedule = $("#schedule_menu").val();
+
         if (schedule !== "" && course.classSchedule.toLowerCase().indexOf(schedule.toLowerCase()) === -1) {
           return false;
         }
@@ -193,12 +256,6 @@ function hidePopup() {
   document.getElementById("location-popup").style.display = "none";
 }
 
-
-// Map ========================================================================
-google.maps.visualRefresh = true;
-var map = undefined, geocoder;
-var markers = [];
-
 function insertPin(course) {
   var address = course.classAddress;
   var organization = course.organization;
@@ -248,7 +305,9 @@ function initialize() {
     $("#aboutLink").click(function() {
         $("#about_window").toggle();
     });
-    startDataLoad(updateMap);
+
+    initGAPI()
+    .then(updateMap);
 }
 
 function showHideLocations() {
@@ -281,5 +340,3 @@ function updateMap() {
     updatePopup();
     hidePopup();
 }
-
-google.maps.event.addDomListener(window, 'load', initialize);

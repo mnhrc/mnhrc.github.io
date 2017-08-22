@@ -8,6 +8,8 @@
         <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgOeFbqElcSmR-zjycke6U8cvfS6E3x14&sensor=false"></script>
+        <script src="https://apis.google.com/js/api.js"></script>
+
         <script src="map_controller.js"></script>
         <meta name="Authors" content="Jason Orendorff, Jacques Woodcock, Amber Adams, Chuck Bryant, Jason Myers" />
     </head>
@@ -171,23 +173,27 @@
             </table>
         </div>
 
-        <div id="overlay--pardonUs" class="overlay">
-            <div class="overlay-modal">
-                <div class="overlay-modalTitle">
-                    <h2 class="u-textCenter"> The ESL Map is being updated </h2>
-                </div>
+        <!--<div id="overlay--pardonUs" class="overlay">-->
+            <!--<div class="overlay-modal">-->
+                <!--<div class="overlay-modalTitle">-->
+                    <!--<h2 class="u-textCenter"> The ESL Map is being updated </h2>-->
+                <!--</div>-->
 
-                <div class="overlay-modalBody">
-                    <p class="u-textCenter" style="line-height: 1.4;">
-                        It will be back soon. For questions or to receive
-                        a spreadsheet of the classes, please contact:
-                    </p>
+                <!--<div class="overlay-modalBody">-->
+                    <!--<p class="u-textCenter" style="line-height: 1.4;">-->
+                        <!--It will be back soon. For questions or to receive-->
+                        <!--a spreadsheet of the classes, please contact:-->
+                    <!--</p>-->
 
-                    <a class="u-block u-textCenter u-fontLarge" href="mailto:info@eslmap.com">info@eslmap.com</a>
-                </div>
-            </div>
-        </div>
+                    <!--<a class="u-block u-textCenter u-fontLarge" href="mailto:info@eslmap.com">info@eslmap.com</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
+    <!--<script async defer src="https://apis.google.com/js/api.js"-->
+        <!--onload="this.onload=function(){};handleClientLoad()"-->
+        <!--onreadystatechange="if (this.readyState === 'complete') this.onload()">-->
+    <!--</script>-->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
