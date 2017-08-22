@@ -95,13 +95,21 @@ function loadSheetData () {
 
         locations
             .filter(function (loc) { return loc.status === 'Approved'; })
-            .forEach(function (loc) { courses.push(loc) });
+            .forEach(function (loc) { courses.push(loc); });
 
         console.info('gapi::loadSheetData::ETL doneskies');
 
         haveData = true;
 
         return locations;
+    }).then(function cleanVals (locations) {
+        // big ugly data cleansing map
+        return locations.map(function (loc) {
+            if (loc.classSchedule === undefined)
+                loc.classSchedule = "";
+
+            return loc;
+        });
     });
 }
 
