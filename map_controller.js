@@ -2,6 +2,11 @@
 var haveData = false;
 var courses = [];
 
+// Map ========================================================================
+google.maps.visualRefresh = true;
+var map = undefined, geocoder;
+var markers = [];
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
 // connect to spreadsheet and pull data from it
@@ -76,6 +81,7 @@ function loadSheetData () {
                 acc[header] = row[i];
                 return acc;
             }, location);
+
         }).map(function extractLatLon (location) {
             // TODO a little checking would probably be good
             // look here if map errors?
@@ -140,6 +146,7 @@ function getFilteredCourses() {
 
         // Filter by schedule.
         var schedule = $("#schedule_menu").val();
+
         if (schedule !== "" && course.classSchedule.toLowerCase().indexOf(schedule.toLowerCase()) === -1) {
           return false;
         }
@@ -240,12 +247,6 @@ function updatePopup() {
 function hidePopup() {
   document.getElementById("location-popup").style.display = "none";
 }
-
-
-// Map ========================================================================
-google.maps.visualRefresh = true;
-var map = undefined, geocoder;
-var markers = [];
 
 function insertPin(course) {
   var address = course.classAddress;
