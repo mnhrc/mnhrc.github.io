@@ -2,12 +2,7 @@
 var haveData = false;
 var courses = [];
 
-
-// Ask for data from the spreadsheet.
-function startDataLoad() {
-  return initGAPI();
-}
-
+// connect to spreadsheet and pull data from it
 function initGAPI (callback) {
     var clientId = '758431188519-datbjcc4jvimdqah661r237hpe06gqdg.apps.googleusercontent.com';
     var scope = "https://www.googleapis.com/auth/spreadsheets.readonly";
@@ -24,7 +19,9 @@ function initGAPI (callback) {
                 scope: scope
             })
                 .then(loadSheetData)
-                .then(res)
+                .then(function (locations) {
+                    res(locations);
+                });
                 // no catch on this thing?
                 //.catch(rej);
         });
@@ -88,15 +85,15 @@ function loadSheetData () {
             return location;
         });
 
-        console.info('gapi::loadSheetData::ETL doneskies');
-
         locations
             .filter(function (loc) { return loc.status === 'Approved'; })
             .forEach(function (loc) { courses.push(loc) });
 
+        console.info('gapi::loadSheetData::ETL doneskies');
+
         haveData = true;
 
-        return Promise.resolve();
+        return locations;
     });
 }
 
@@ -298,7 +295,7 @@ function initialize() {
         $("#about_window").toggle();
     });
 
-    startDataLoad()
+    initGAPI()
     .then(updateMap);
 }
 
