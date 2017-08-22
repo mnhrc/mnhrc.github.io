@@ -2,6 +2,8 @@
 var haveData = false;
 var courses = [];
 
+google.maps.event.addDomListener(window, 'load', initialize);
+
 // connect to spreadsheet and pull data from it
 function initGAPI (callback) {
     var clientId = '758431188519-datbjcc4jvimdqah661r237hpe06gqdg.apps.googleusercontent.com';
@@ -329,5 +331,3 @@ function updateMap() {
     updatePopup();
     hidePopup();
 }
-
-google.maps.event.addDomListener(window, 'load', initialize);
