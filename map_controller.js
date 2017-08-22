@@ -23,7 +23,7 @@ function initGAPI (callback) {
                 apiKey: apiKey,
                 discoveryDocs: discoveryDocs,
                 //clientId: clientId,
-                scope: scope
+                //scope: scope
             })
                 .then(loadSheetData)
                 .then(function (locations) {
@@ -38,10 +38,13 @@ function initGAPI (callback) {
 function loadSheetData () {
     console.info('gapi::loadSheetData');
 
-    //var spreadsheetId = '1aI16jUKAHFLmjKXtjI2nCYltDWa1awCFZ2Kt1IhhbZ4';
-    var spreadsheetId = '1fnAs8ZrPcNGP6LTDyV9ajiP2grdpNCiPQlSdCVFM7ug';
+    // sheet shared with me, seemingly controlled by MNHRC
+    var spreadsheetId = '1aI16jUKAHFLmjKXtjI2nCYltDWa1awCFZ2Kt1IhhbZ4';
 
-    // triggering updateMap at some point
+    // personal copy of sheet (nick@codefornashville.org)
+    //var spreadsheetId = '1fnAs8ZrPcNGP6LTDyV9ajiP2grdpNCiPQlSdCVFM7ug';
+
+    // send out a promise
     return gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: spreadsheetId,
         range: 'Sheet1'
