@@ -6,12 +6,6 @@ var courses = [];
 // Ask for data from the spreadsheet.
 function startDataLoad() {
   return initGAPI();
-  //var url = 'http://69.167.174.162/kkite/test.php';
-
-  //$.getJSON(url, function (json) {
-    //onSpreadsheetData(json);
-    //callback();
-  //});
 }
 
 function initGAPI (callback) {
@@ -96,54 +90,15 @@ function loadSheetData () {
 
         console.info('gapi::loadSheetData::ETL doneskies');
 
-        // mutator
-        onSpreadsheetData(locations);
+        locations
+            .filter(function (loc) { return loc.status === 'Approved'; })
+            .forEach(function (loc) { courses.push(loc) });
+
+        haveData = true;
 
         return Promise.resolve();
     });
 }
-
-// This is called when the data loads from the spreadsheet.
-function onSpreadsheetData(json) {
-    var fields = ["Organization", "address", "Latitude/Longitude", "classAddress",
-                  "Courses Offered", "Start Date", "Fee",
-                  "Description", "Phone Number", "Email Address", "websiteURL",
-                  "Days Classes Offered", "Class Times", "Faith Based",
-                  "Class Schedule", "Curriculum Used"];
-    var lastRow = {};
-    json.forEach(function (row) {
-        //var newRow = {};
-
-        //// Empty cells are automatically filled based on the preceding row, but
-        //// ONLY if this row has the same organization as the last one.
-        //// Obviously it would be silly to auto-fill a row for one course with
-        //// values from a different organization's course!
-        //var org = row.gsx$organization.$t;
-        //var sameOrg = org === lastRow.organization || org === "";
-
-        //// Populate all the fields.
-        //fields.forEach(function (name) {
-            //var fieldName = name.toLowerCase();
-            //var value = row["gsx$" + fieldName].$t;
-            //if (row["gsx$" + fieldName] === undefined) {
-                //return;
-            //}
-            //if (sameOrg && value === "")
-              //value = lastRow[name];
-            //newRow[name] = value;
-          //});
-        //lastRow = newRow;
-
-        // Only add the row to courses if it has been approved.
-        if (row.status == 'Approved') {
-          //courses.push(newRow);
-          courses.push(row);
-        }
-    });
-
-    haveData = true;
-
-  }
 
 function listLocation(organization, classAddress) {
       var output = '<tr class="locations"><td class="location-list">'
