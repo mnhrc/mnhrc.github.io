@@ -22,7 +22,6 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 // connect to spreadsheet and pull data from it
 function initGAPI (callback) {
-
     return new Promise(function (res, rej) {
         gapi.load('client', function () {
             gapi.client.init({
