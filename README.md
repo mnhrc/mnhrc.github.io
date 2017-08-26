@@ -1,5 +1,4 @@
-<img src="https://github.com/enlore/mnhrc.github.io/blob/master/images/logo.png?raw=true" />
-<img src="https://github.com/enlore/mnhrc.github.io/blob/master/images/c4n-logo.png?raw=true" style="text-align: right;"/>
+<img src="https://github.com/enlore/mnhrc.github.io/blob/master/images/logo.png?raw=true" /><img src="https://github.com/enlore/mnhrc.github.io/blob/master/images/c4n-logo.png?raw=true" style="text-align: right;"/>
 
 ESL Map
 =======
