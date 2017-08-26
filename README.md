@@ -1,23 +1,32 @@
 ![Metro Nashville Human Relations Commission logo](https://github.com/enlore/mnhrc.github.io/blob/master/images/logo.png?raw=true)
 
-esl-nashville
-=============
+ESL Map
+=======
 
 This project provides the power for the [ESL Map](http://www.eslmap.com).
 
-It uses a simple google form to gather the data, and gets the data for display
-by calling the google spreadsheet json endpoint.
+It uses a simple Google form to gather the data, and gets the data for display
+by calling the Google spreadsheet json endpoint. It's hosted here on Github
+Pages, and requires only Github and Google accounts, both of which are free.
 
-## Notes
+## Contributing
 
-See https://developers.google.com/api-client-library/javascript/features/authentication](GAPI docs on authentication).
+    # optionally, install handy webserver to use in dev
+    npm install -g live-server
 
-Data hosted as Google Sheet. Collected from community via Google Form.
+    # clone the repo
+    git clone https://github.com/mnhrc/mnhrc.github.io
 
-GAPI client library used to directly access google spreadsheet. GAPI API key
-required. Not using OAuth, as users can access and submit the data anonymously.
+    # do work
+    cd mnhrc.github.io
+    live-server . # or your preferred method for hosting local frontend projects
 
-## Deployment Steps
+Please open a Pull Request to submit your changes.
+
+Please open an Issue (with screenshots and/or sample code and error messages)
+to report bugs or other problems.
+
+## Deploy for Your Locale
 
 If you'd like to repurpose this app for your area, you'll need to make changes
 to the client code and provide your own infrastructure (Google Form, Google
@@ -63,7 +72,6 @@ will run, and you should have enabled the Google Sheets API for your account.
 Rather than describe the schema of the form and resultant spreadsheet, link to
 examples here.
 
-
 ### Update Client Code
 
 #### Requirements
@@ -76,4 +84,15 @@ examples here.
 
 1. Locate and replace the API key in the client codebase
 1. Locate and replace spreadsheet ID in client codebase
+1. Locate and replace the center lat and lng values to define the initial
+   center point of the map on load
 
+As of this writing, all of these values are kept at the top of the
+`map_controller.js` file for ease of access.
+
+### Deploy to Host of Choice
+
+The application is completely contained as a simple website and requires only
+to be hosted as such.
+
+For example, we host it for free on Github Pages.
