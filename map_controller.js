@@ -4,8 +4,13 @@ var courses = [];
 
 // Map ========================================================================
 google.maps.visualRefresh = true;
+
 var map, geocoder;
 var markers = [];
+
+// define center point of initial map render
+var centerLat = 36.16;
+var centerLng = 273.215;
 
 // Sheets API =================================================================
 var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
@@ -293,7 +298,7 @@ function insertPin(course) {
 function initialize() {
     // Create the map.
     map = new google.maps.Map(document.getElementById("map-canvas"), {
-        center: new google.maps.LatLng(36.16, 273.215),
+        center: new google.maps.LatLng(centerLat, centerLng),
         zoom: 11,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
