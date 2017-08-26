@@ -1,29 +1,37 @@
-// Data =================================================================
+// Data =======================================================================
 var haveData = false;
 var courses = [];
 
 // Map ========================================================================
 google.maps.visualRefresh = true;
-var map = undefined, geocoder;
+
+var map, geocoder;
 var markers = [];
 
+// define center point of initial map render
+var centerLat = 36.16;
+var centerLng = 273.215;
+
+// Sheets API =================================================================
+var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+var apiKey = 'AIzaSyC8YkrMM7NEO59ERQ2OBkE6I3QfLyVmN64';
+
+// sheet shared with me (nick), seemingly controlled by MNHRC
+var spreadsheetId = '1aI16jUKAHFLmjKXtjI2nCYltDWa1awCFZ2Kt1IhhbZ4';
+
+// personal copy of sheet (nick@codefornashville.org)
+//var spreadsheetId = '1fnAs8ZrPcNGP6LTDyV9ajiP2grdpNCiPQlSdCVFM7ug';
+
+// lifecycle start
 google.maps.event.addDomListener(window, 'load', initialize);
 
 // connect to spreadsheet and pull data from it
 function initGAPI (callback) {
-    var clientId = '758431188519-datbjcc4jvimdqah661r237hpe06gqdg.apps.googleusercontent.com';
-    var scope = "https://www.googleapis.com/auth/spreadsheets.readonly";
-    //var scope = "spreadsheets.readonly";
-    var discoveryDocs = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-    var apiKey = 'AIzaSyC8YkrMM7NEO59ERQ2OBkE6I3QfLyVmN64';
-
     return new Promise(function (res, rej) {
         gapi.load('client', function () {
             gapi.client.init({
                 apiKey: apiKey,
                 discoveryDocs: discoveryDocs,
-                //clientId: clientId,
-                //scope: scope
             })
                 .then(loadSheetData)
                 .then(function (locations) {
@@ -37,12 +45,6 @@ function initGAPI (callback) {
 
 function loadSheetData () {
     console.info('gapi::loadSheetData');
-
-    // sheet shared with me, seemingly controlled by MNHRC
-    var spreadsheetId = '1aI16jUKAHFLmjKXtjI2nCYltDWa1awCFZ2Kt1IhhbZ4';
-
-    // personal copy of sheet (nick@codefornashville.org)
-    //var spreadsheetId = '1fnAs8ZrPcNGP6LTDyV9ajiP2grdpNCiPQlSdCVFM7ug';
 
     // send out a promise
     return gapi.client.sheets.spreadsheets.values.get({
@@ -296,7 +298,7 @@ function insertPin(course) {
 function initialize() {
     // Create the map.
     map = new google.maps.Map(document.getElementById("map-canvas"), {
-        center: new google.maps.LatLng(36.16, 273.215),
+        center: new google.maps.LatLng(centerLat, centerLng),
         zoom: 11,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
