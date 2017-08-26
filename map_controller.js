@@ -4,7 +4,7 @@ var courses = [];
 
 // Map ========================================================================
 google.maps.visualRefresh = true;
-var map = undefined, geocoder;
+var map, geocoder;
 var markers = [];
 
 // Sheets API =================================================================
